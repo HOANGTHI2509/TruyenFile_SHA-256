@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử - Hệ thống truyền file</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Lịch sử truyền file</h1>
+            <nav>
+                <a href="/">Trang chủ</a>
+                {% if session.is_admin %}
+                <a href="/admin">Quản trị</a>
+                {% endif %}
+                <a href="/logout">Đăng xuất</a>
+            </nav>
+        </header>
+
+        <div class="history-content">
+            <div class="history-table">
+                <table id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Tên file</th>
+                            <th>Người gửi</th>
+                            <th>Người nhận</th>
+                            <th>Mã băm SHA-256</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadHistory() {
+            try {
+                const response = await fetch('/api/history');
+                const history = await response.json();
+                
+                const tbody = document.getElementById('historyTableBody');
+                tbody.innerHTML = '';
+                
+                history.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${new Date(item.timestamp).toLocaleString('vi-VN')}</td>
+                        <td>${item.filename}</td>
+                        <td>${item.sender}</td>
+                        <td>${item.receiver}</td>
+                        <td class="hash-cell" title="${item.hash}">${item.hash.substring(0, 16)}...</td>
+                        <td>
+                            <a href="/download/${item.id}" class="btn-download">Tải xuống</a>
+                            <button onclick="verifyHash('${item.id}')" class="btn-verify">Kiểm tra</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Lỗi khi tải lịch sử:', error);
+            }
+        }
+
+        async function verifyHash(fileId) {
+            try {
+                const response = await fetch('/api/verify_hash', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ file_id: fileId })
+                });
+                
+                const result = await response.json();
+                
+                if (result.valid) {
+                    alert('✅ Mã băm trùng khớp! File nguyên vẹn.');
+                } else {
+                    alert('❌ Mã băm không khớp! File có thể đã bị thay đổi.\n\n' +
+                          `Mã băm gốc: ${result.original_hash}\n` +
+                          `Mã băm hiện tại: ${result.current_hash}`);
+                }
+            } catch (error) {
+                alert('Có lỗi khi kiểm tra mã băm.');
+            }
+        }
+
+        // Tải lịch sử khi trang được load
+        document.addEventListener('DOMContentLoaded', loadHistory);
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - Hệ thống truyền file</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-form">
+            <div class="welcome-header">
+                <h1>📝 Đăng ký tài khoản</h1>
+                <p class="subtitle">Tạo tài khoản để sử dụng hệ thống truyền file</p>
+            </div>
+            
+            <h2>Đăng ký</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập:</label>
+                    <input type="text" id="username" name="username" required placeholder="Nhập tên đăng nhập" minlength="3">
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu:</label>
+                    <input type="password" id="password" name="password" required placeholder="Nhập mật khẩu" minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Xác nhận mật khẩu:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Nhập lại mật khẩu">
+                </div>
+                <button type="submit">Đăng ký</button>
+            </form>
+            
+            <div class="auth-links">
+                <p>Đã có tài khoản? <a href="{{ url_for('login') }}">Đăng nhập ngay</a></p>
+                <p class="first-user-note">💡 Tài khoản đầu tiên sẽ tự động trở thành Admin</p>
+            </div>
+            
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                document.getElementById('message').innerHTML = 
+                    '<div class="error">❌ Mật khẩu xác nhận không khớp</div>';
+                return;
+            }
+
+            if (password.length < 6) {
+                document.getElementById('message').innerHTML = 
+                    '<div class="error">❌ Mật khẩu phải có ít nhất 6 ký tự</div>';
+                return;
+            }
+            
+            // Hiển thị loading
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Đang đăng ký...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('message').innerHTML = 
+                        '<div class="success">✅ Đăng ký thành công! Đang chuyển hướng đến trang đăng nhập...</div>';
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    document.getElementById('message').innerHTML = 
+                        `<div class="error">❌ ${data.message}</div>`;
+                }
+            } catch (error) {
+                document.getElementById('message').innerHTML = 
+                    '<div class="error">❌ Có lỗi xảy ra. Vui lòng thử lại.</div>';
+            } finally {
+                // Khôi phục button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Auto focus vào username input
+        document.getElementById('username').focus();
+    </script>
+</body>
+</html>

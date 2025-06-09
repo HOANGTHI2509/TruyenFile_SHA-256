@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị - Hệ thống truyền file</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Trang quản trị</h1>
+            <nav>
+                <a href="/">Trang chủ</a>
+                <a href="/history">Lịch sử</a>
+                <a href="/logout">Đăng xuất</a>
+            </nav>
+        </header>
+
+        <div class="admin-content">
+            <div class="admin-stats">
+                <h3>Thống kê hệ thống</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Người dùng online</h4>
+                        <span id="onlineCount">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Tổng file đã truyền</h4>
+                        <span id="totalFiles">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-history">
+                <h3>Lịch sử tất cả người dùng</h3>
+                <div class="filter-section">
+                    <select id="userFilter">
+                        <option value="">Tất cả người dùng</option>
+                    </select>
+                    <button onclick="filterHistory()">Lọc</button>
+                </div>
+                
+                <table id="adminHistoryTable">
+                    <thead>
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Tên file</th>
+                            <th>Người gửi</th>
+                            <th>Người nhận</th>
+                            <th>Mã băm SHA-256</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminHistoryTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allHistory = [];
+
+        async function loadAdminData() {
+            try {
+                // Tải lịch sử
+                const historyResponse = await fetch('/api/history');
+                allHistory = await historyResponse.json();
+                
+                // Tải danh sách users
+                const usersResponse = await fetch('/api/users');
+                const users = await usersResponse.json();
+                
+                // Cập nhật thống kê
+                document.getElementById('totalFiles').textContent = allHistory.length;
+                document.getElementById('onlineCount').textContent = 
+                    users.filter(u => u.online).length;
+                
+                // Cập nhật filter
+                const userFilter = document.getElementById('userFilter');
+                userFilter.innerHTML = '<option value="">Tất cả người dùng</option>';
+                
+                const uniqueUsers = [...new Set([
+                    ...allHistory.map(h => h.sender),
+                    ...allHistory.map(h => h.receiver)
+                ])];
+                
+                uniqueUsers.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user;
+                    option.textContent = user;
+                    userFilter.appendChild(option);
+                });
+                
+                // Hiển thị lịch sử
+                displayHistory(allHistory);
+                
+            } catch (error) {
+                console.error('Lỗi khi tải dữ liệu admin:', error);
+            }
+        }
+
+        function displayHistory(history) {
+            const tbody = document.getElementById('adminHistoryTableBody');
+            tbody.innerHTML = '';
+            
+            history.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(item.timestamp).toLocaleString('vi-VN')}</td>
+                    <td>${item.filename}</td>
+                    <td>${item.sender}</td>
+                    <td>${item.receiver}</td>
+                    <td class="hash-cell" title="${item.hash}">${item.hash.substring(0, 16)}...</td>
+                    <td>
+                        <a href="/download/${item.id}" class="btn-download">Tải xuống</a>
+                        <button onclick="verifyHash('${item.id}')" class="btn-verify">Kiểm tra</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterHistory() {
+            const selectedUser = document.getElementById('userFilter').value;
+            
+            if (!selectedUser) {
+                displayHistory(allHistory);
+            } else {
+                const filtered = allHistory.filter(h => 
+                    h.sender === selectedUser || h.receiver === selectedUser
+                );
+                displayHistory(filtered);
+            }
+        }
+
+        async function verifyHash(fileId) {
+            try {
+                const response = await fetch('/api/verify_hash', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ file_id: fileId })
+                });
+                
+                const result = await response.json();
+                
+                if (result.valid) {
+                    alert('✅ Mã băm trùng khớp! File nguyên vẹn.');
+                } else {
+                    alert('❌ Mã băm không khớp! File có thể đã bị thay đổi.\n\n' +
+                          `Mã băm gốc: ${result.original_hash}\n` +
+                          `Mã băm hiện tại: ${result.current_hash}`);
+                }
+            } catch (error) {
+                alert('Có lỗi khi kiểm tra mã băm.');
+            }
+        }
+
+        // Tải dữ liệu khi trang được load
+        document.addEventListener('DOMContentLoaded', loadAdminData);
+    </script>
+</body>
+</html>
