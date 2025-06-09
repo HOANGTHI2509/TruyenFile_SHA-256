@@ -61,6 +61,7 @@ Một ứng dụng web truyền file real-time với kiểm tra tính toàn vẹ
 2. Chọn người nhận từ danh sách
 3. Nhấn "Gửi file"
 4. Hệ thống sẽ tính toán mã băm SHA-256 và gửi
+![Giao diện demo](/tongQuanHeThong.png)
 
 
 ### 📥 Nhận File
@@ -78,7 +79,7 @@ Một ứng dụng web truyền file real-time với kiểm tra tính toàn vẹ
 1. Mã băm gốc (khi gửi)
 2. Mã băm hiện tại (kiểm tra)
 3. Kết quả so sánh
-
+![Giao diện demo](/KiemTraFile.png)
 
 
 
@@ -90,6 +91,7 @@ Một ứng dụng web truyền file real-time với kiểm tra tính toàn vẹ
 - Lọc dữ liệu theo người dùng
 - Quản lý toàn bộ file trong hệ thống
 
+![Giao diện demo](/LichSuQuanTri.png)
 
 ## 🛠️ Công Nghệ Sử Dụng
 
