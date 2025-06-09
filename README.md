@@ -35,27 +35,7 @@ Một ứng dụng web truyền file real-time với kiểm tra tính toàn vẹ
 - **Backup tự động**: Đảm bảo an toàn dữ liệu
 
 ## 🏗️ Cấu Trúc Dự Án
-DuAn3/
-├── app.py                 # Server chính Flask + Socket.IO
-├── requirements.txt       # Dependencies Python
-├── README.md             # Tài liệu dự án
-├── static/
-│   ├── css/
-│   │   └── style.css     # Styling responsive
-│   ├── js/
-│   │   └── main.js       # JavaScript client-side
-│   └── uploads/          # Thư mục lưu file upload
-├── templates/
-│   ├── index.html        # Trang chính
-│   ├── login.html        # Trang đăng nhập
-│   ├── register.html     # Trang đăng ký
-│   ├── history.html      # Lịch sử user
-│   └── admin.html        # Trang quản trị
-└── data/
-├── users.json        # Database người dùng
-├── history.json      # Lịch sử truyền file
-└── files.json        # Metadata files
-
+![Giao diện demo](/CayThuMuc.png)
 
 ## 🚀 Cài Đặt và Chạy
 
