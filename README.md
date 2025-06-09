@@ -61,7 +61,7 @@ Một ứng dụng web truyền file real-time với kiểm tra tính toàn vẹ
 2. Chọn người nhận từ danh sách
 3. Nhấn "Gửi file"
 4. Hệ thống sẽ tính toán mã băm SHA-256 và gửi
-![Giao diện demo](/tongQuanHeThong.png)
+![Giao diện demo](/TongQuanHeThong.png)
 
 
 ### 📥 Nhận File
