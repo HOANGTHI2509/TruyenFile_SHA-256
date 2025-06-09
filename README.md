@@ -35,3 +35,173 @@ Một ứng dụng web truyền file real-time với kiểm tra tính toàn vẹ
 - **Backup tự động**: Đảm bảo an toàn dữ liệu
 
 ## 🏗️ Cấu Trúc Dự Án
+DuAn3/
+├── app.py                 # Server chính Flask + Socket.IO
+├── requirements.txt       # Dependencies Python
+├── README.md             # Tài liệu dự án
+├── static/
+│   ├── css/
+│   │   └── style.css     # Styling responsive
+│   ├── js/
+│   │   └── main.js       # JavaScript client-side
+│   └── uploads/          # Thư mục lưu file upload
+├── templates/
+│   ├── index.html        # Trang chính
+│   ├── login.html        # Trang đăng nhập
+│   ├── register.html     # Trang đăng ký
+│   ├── history.html      # Lịch sử user
+│   └── admin.html        # Trang quản trị
+└── data/
+├── users.json        # Database người dùng
+├── history.json      # Lịch sử truyền file
+└── files.json        # Metadata files
+
+
+## 🚀 Cài Đặt và Chạy
+
+### Yêu Cầu Hệ Thống
+- Python 3.8+
+- Trình duyệt web hiện đại
+- 100MB dung lượng trống
+
+## 📋 Hướng Dẫn Sử Dụng
+
+### 🔑 Đăng Ký và Đăng Nhập
+
+1. Truy cập trang đăng ký
+2. Tạo tài khoản mới (tài khoản đầu tiên sẽ tự động là Admin)
+3. Đăng nhập với thông tin vừa tạo
+
+
+### 📤 Gửi File
+
+1. Chọn file từ máy tính
+2. Chọn người nhận từ danh sách
+3. Nhấn "Gửi file"
+4. Hệ thống sẽ tính toán mã băm SHA-256 và gửi
+
+
+### 📥 Nhận File
+
+1. File sẽ hiển thị trong bảng "File đã nhận"
+2. Nhấn "Tải xuống" để download
+3. Nhấn "Kiểm tra" để xác minh tính toàn vẹn
+
+
+### 🔍 Kiểm Tra Tính Toàn Vẹn
+
+1. Nhấn nút "Kiểm tra" bên cạnh file
+2. Hệ thống sẽ hiển thị:
+
+1. Mã băm gốc (khi gửi)
+2. Mã băm hiện tại (kiểm tra)
+3. Kết quả so sánh
+
+
+
+
+
+### 👑 Tính Năng Admin
+
+- Xem lịch sử tất cả người dùng
+- Thống kê hoạt động hệ thống
+- Lọc dữ liệu theo người dùng
+- Quản lý toàn bộ file trong hệ thống
+
+
+## 🛠️ Công Nghệ Sử Dụng
+
+### Backend
+
+- **Flask**: Web framework Python
+- **Flask-SocketIO**: Real-time communication
+- **Werkzeug**: File handling và security
+- **Hashlib**: SHA-256 hashing
+
+
+### Frontend
+
+- **HTML5**: Semantic markup
+- **CSS3**: Responsive design với Flexbox/Grid
+- **JavaScript ES6+**: Modern client-side scripting
+- **Socket.IO Client**: Real-time updates
+
+
+### Database
+
+- **JSON Files**: Lightweight data storage
+- **File System**: Secure file storage
+
+
+## 🔒 Bảo Mật
+
+### Mã Hóa
+
+- **SHA-256**: Kiểm tra tính toàn vẹn file
+- **Password Hashing**: Mật khẩu được hash trước khi lưu
+- **Session Management**: Quản lý phiên đăng nhập an toàn
+
+
+### Validation
+
+- **File Type Checking**: Kiểm tra loại file upload
+- **Input Sanitization**: Làm sạch dữ liệu đầu vào
+- **Access Control**: Phân quyền truy cập file
+
+
+### Best Practices
+
+- **Secure File Names**: Tên file được làm sạch
+- **Path Traversal Protection**: Bảo vệ khỏi tấn công đường dẫn
+- **CORS Configuration**: Cấu hình CORS an toàn
+
+
+## 📱 Responsive Design
+
+Ứng dụng được thiết kế responsive, hoạt động tốt trên:
+
+- 🖥️ Desktop (1200px+)
+- 💻 Laptop (768px - 1199px)
+- 📱 Tablet (480px - 767px)
+- 📱 Mobile (< 480px)
+
+
+## 🎨 Giao Diện
+
+### Màu Sắc Chính
+
+- **Primary**: `#667eea` (Gradient blue)
+- **Secondary**: `#764ba2` (Gradient purple)
+- **Success**: `#48bb78` (Green)
+- **Warning**: `#ed8936` (Orange)
+- **Error**: `#f56565` (Red)
+
+
+### Typography
+
+- **Font Family**: Segoe UI, Tahoma, Geneva, Verdana, sans-serif
+- **Responsive Sizing**: Tự động điều chỉnh theo màn hình
+
+## 📊 API Endpoints
+
+### Authentication
+
+- `POST /login` - Đăng nhập
+- `POST /register` - Đăng ký
+- `GET /logout` - Đăng xuất
+
+
+### File Operations
+
+- `POST /upload` - Upload file
+- `GET /download/<file_id>` - Download file
+- `POST /api/verify_hash` - Kiểm tra mã băm
+
+
+### Data APIs
+
+- `GET /api/users` - Danh sách người dùng
+- `GET /api/received-files` - File đã nhận
+- `GET /api/history` - Lịch sử truyền file
+
+
