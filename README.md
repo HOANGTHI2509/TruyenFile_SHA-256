@@ -51,6 +51,8 @@ Một ứng dụng web truyền file real-time với kiểm tra tính toàn vẹ
 1. Truy cập trang đăng ký
 2. Tạo tài khoản mới (tài khoản đầu tiên sẽ tự động là Admin)
 3. Đăng nhập với thông tin vừa tạo
+![Giao diện demo](/DangNhap.png)
+![Giao diện demo](/DangKy.png)
 
 
 ### 📤 Gửi File
