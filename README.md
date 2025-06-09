@@ -150,22 +150,6 @@ Một ứng dụng web truyền file real-time với kiểm tra tính toàn vẹ
 - 📱 Mobile (< 480px)
 
 
-## 🎨 Giao Diện
-
-### Màu Sắc Chính
-
-- **Primary**: `#667eea` (Gradient blue)
-- **Secondary**: `#764ba2` (Gradient purple)
-- **Success**: `#48bb78` (Green)
-- **Warning**: `#ed8936` (Orange)
-- **Error**: `#f56565` (Red)
-
-
-### Typography
-
-- **Font Family**: Segoe UI, Tahoma, Geneva, Verdana, sans-serif
-- **Responsive Sizing**: Tự động điều chỉnh theo màn hình
-
 ## 📊 API Endpoints
 
 ### Authentication
